@@ -13,6 +13,7 @@ import PointsValidation from '../components/PointsValidation'
 import { useProjet } from '../hooks/useProjet'
 import { useAxes } from '../hooks/useAxes'
 import { useRessources } from '../hooks/useRessources'
+import { useBlocs } from '../hooks/useBlocs'
 
 export default function Editor() {
   const [user, setUser] = useState(null)
@@ -28,6 +29,7 @@ export default function Editor() {
   const { projet, loading, updateMeteo } = useProjet()
   const { axes, items, updateStatut, addItem, deleteItem, updateItem } = useAxes(projet?.id)
   const { ressources, specs, updateRessource, updateSpec } = useRessources(projet?.id)
+  const { blocs, updateBloc } = useBlocs(projet?.id)
 
   useEffect(() => {
     if (!supabase) {
@@ -55,7 +57,7 @@ export default function Editor() {
       setTimeout(() => setSaveStatus(null), 3000)
       return
     }
-    const snapshot = { projet, axes, items, ressources, specs }
+    const snapshot = { projet, axes, items, ressources, specs, blocs }
     const { error } = await supabase.from('historique').insert({
       projet_id: projet.id,
       semaine,
@@ -84,6 +86,7 @@ export default function Editor() {
       <div className="editor-bar">
         <span>✏️ Mode éditeur{!supabase ? ' · mode local (Supabase non configuré)' : ''}</span>
         <div style={{display:'flex',gap:8,alignItems:'center',flexWrap:'wrap'}}>
+          <Link to="/historique" className="btn btn-ghost btn-sm">📅 Historique</Link>
           <Link to="/" className="btn btn-ghost btn-sm">← Dashboard</Link>
           {user && supabase && (
             <button className="btn btn-ghost btn-sm" onClick={handleLogout}>Déconnexion</button>
@@ -92,9 +95,9 @@ export default function Editor() {
       </div>
 
       <MeteoHeader projet={projet} editable onMeteoChange={updateMeteo} />
-      <ContexteBanner />
-      <LotsGrid />
-      <AlerteBanner />
+      <ContexteBanner data={blocs.contexte} editable onUpdate={d => updateBloc('contexte', d)} />
+      <LotsGrid data={blocs.lots} editable onUpdate={d => updateBloc('lots', d)} />
+      <AlerteBanner data={blocs.alerte} editable onUpdate={d => updateBloc('alerte', d)} />
 
       <div className="sec-lbl">Suivi par axe</div>
       <div className="grid">
@@ -124,8 +127,8 @@ export default function Editor() {
         onSpecChange={updateSpec}
       />
 
-      <PlanAction />
-      <PointsValidation />
+      <PlanAction data={blocs.plan_actions} editable onUpdate={d => updateBloc('plan_actions', d)} />
+      <PointsValidation data={blocs.points_validation} editable onUpdate={d => updateBloc('points_validation', d)} />
 
       <div className="snapshot-bar">
         <span style={{fontSize:'12px',fontWeight:500,color:'var(--g800)'}}>📸 Snapshot hebdomadaire</span>
@@ -140,7 +143,7 @@ export default function Editor() {
       </div>
 
       <div className="ft">
-        <div className="ft-txt">Météo projet · Mode éditeur · Programme D365 / AS400 · v1</div>
+        <div className="ft-txt">Météo projet · Mode éditeur · Programme D365 / AS400 · v2</div>
         <div className="leg">
           <div className="li"><span className="sd ok"></span> OK</div>
           <div className="li"><span className="sd warn"></span> Attention</div>

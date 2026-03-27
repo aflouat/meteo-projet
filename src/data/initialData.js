@@ -58,3 +58,59 @@ export const SPECS_INITIAL = [
   { id: 'spec1', projet_id: 'local', nom: 'Fournisseurs', avancement: 90, seuil_dev: 80, statut: 'pret' },
   { id: 'spec2', projet_id: 'local', nom: 'Articles', avancement: 37, seuil_dev: 80, statut: 'en_cours' },
 ]
+
+export const BLOCS_DEFAULTS = {
+  contexte: {
+    texte: "Le chantier Référentiel (Articles / Fournisseurs) nécessite d'avancer simultanément côté AS400/Talend et côté D365, malgré des arbitrages métier encore ouverts (dont le prix d'achat). Pour éviter un blocage global, un découpage en deux lots successifs est proposé et soumis à validation.",
+  },
+  alerte: {
+    titre: "Points d'attention clés",
+    items: [
+      "Risque de révision métier impactant Lot 2 → coordination renforcée DSI ↔ BPO",
+      "Risque de double design si le périmètre évolue en cours de route",
+      "Prix d'achat à arbitrer formellement avant fin Lot 2",
+      "Charge Talend / DMF sous tension · Équipe AS400 multi-projets → capacité critique",
+    ],
+  },
+  lots: {
+    lot1: {
+      badge: '✦ Lot 1 — Design AS IS Legacy',
+      titre: 'Avancer immédiatement côté Talend / AS400',
+      tag: 'En exécution',
+      items: [
+        { check: true, texte: "S'appuie sur les interfaces existantes" },
+        { check: true, texte: 'Démarrage immédiat — sans dépendances D365' },
+        { check: true, texte: 'Flux articles & fournisseurs → AS400 via Talend / DMF' },
+        { check: false, texte: "Prix d'achat volontairement exclu" },
+      ],
+    },
+    lot2: {
+      badge: '◈ Lot 2 — Design D365 + mapping complet',
+      titre: 'Finaliser le modèle cible avec D365',
+      tag: 'À structurer',
+      items: [
+        { check: true, texte: 'Intègre flux D365, règles de gestion, harmonisation BPO' },
+        { check: true, texte: 'Finalise le modèle cible complet' },
+        { check: true, texte: 'Cadrage complet du prix d\'achat' },
+        { check: false, texte: 'Dépend des arbitrages métier — à piloter' },
+      ],
+    },
+  },
+  plan_actions: {
+    actions: [
+      { num: 1, cls: 'n1', title: 'Sécuriser le Lot 1', tag: 'tg', tagTxt: 'Exécution directe', obj: 'Finaliser Design AS IS · Verrouiller flux Talend · Documenter hors-scope · Revue hebdo 15 min DSI ↔ Talend', goal: 'Permettre le développement sans dépendre de D365', goalColor: 'var(--g600)' },
+      { num: 2, cls: 'n2', title: 'Structurer le Lot 2', tag: 'tb', tagTxt: 'Pilotage coordination', obj: 'Recenser règles mapping manquantes avec BPO · Carte impacts D365→AS400 · Ateliers timebox', goal: 'Cadrer D365 sans retarder AS400', goalColor: 'var(--b600)' },
+      { num: 3, cls: 'n3', title: "Cadrer le Prix d'achat", tag: 'tr', tagTxt: 'Blocage potentiel', obj: "Clarifier sources D365/OPEX/Legacy · Scénarios + impacts au métier · Arbitrage formel avant Lot 2", goal: 'Éviter une remise à plat tardive', goalColor: 'var(--r600)' },
+      { num: 4, cls: 'n4', title: 'Aligner DSI ↔ Métier BPO', tag: 'ta', tagTxt: 'Zone de valeur', obj: '1 référentiel de suivi unique · Décisions métier → impact technique · Escalades ciblées uniquement', goal: 'Maîtrise des interfaces — éviter le chaos', goalColor: 'var(--a600)' },
+      { num: 5, cls: 'n5', title: 'Contrôle hebdomadaire', tag: null, tagTxt: 'Reporting', obj: "Charge AS400 & Talend/DMF · Arbitrages métier (prix d'achat) · Avancement spec Articles · Météo mise à jour", goal: 'Reporting simple et technique — pas un PMO', goalColor: 'var(--gr600)' },
+    ],
+  },
+  points_validation: {
+    titre: '🔍 Points à valider avant communication',
+    items: [
+      'Valider officiellement le découpage Lot 1 / Lot 2 comme stratégie programme',
+      "Confirmer que le prix d'achat reste hors Lot 1 et traité uniquement dans Lot 2",
+      "Décider de l'ajout d'une slide enjeux D365 → AS400 pour renforcer le positionnement COPIL",
+    ],
+  },
+}

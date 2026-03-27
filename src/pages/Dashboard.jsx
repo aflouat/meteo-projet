@@ -11,11 +11,13 @@ import PointsValidation from '../components/PointsValidation'
 import { useProjet } from '../hooks/useProjet'
 import { useAxes } from '../hooks/useAxes'
 import { useRessources } from '../hooks/useRessources'
+import { useBlocs } from '../hooks/useBlocs'
 
 export default function Dashboard() {
   const { projet, loading } = useProjet()
   const { axes, items } = useAxes(projet?.id)
   const { ressources, specs } = useRessources(projet?.id)
+  const { blocs } = useBlocs(projet?.id)
 
   if (loading) return <div className="wrap" style={{textAlign:'center',padding:'40px',color:'var(--text-secondary)'}}>Chargement…</div>
 
@@ -24,9 +26,9 @@ export default function Dashboard() {
   return (
     <div className="wrap">
       <MeteoHeader projet={projet} editable={false} />
-      <ContexteBanner />
-      <LotsGrid />
-      <AlerteBanner />
+      <ContexteBanner data={blocs.contexte} editable={false} />
+      <LotsGrid data={blocs.lots} editable={false} />
+      <AlerteBanner data={blocs.alerte} editable={false} />
 
       <div className="sec-lbl">Suivi par axe</div>
       <div className="grid">
@@ -39,11 +41,11 @@ export default function Dashboard() {
       </div>
 
       <RessourcesCard ressources={ressources} specs={specs} editable={false} />
-      <PlanAction />
-      <PointsValidation />
+      <PlanAction data={blocs.plan_actions} editable={false} />
+      <PointsValidation data={blocs.points_validation} editable={false} />
 
       <div className="ft">
-        <div className="ft-txt">Météo projet · Mars 2026 · Programme D365 / AS400 · Coordinateur technique · v1</div>
+        <div className="ft-txt">Météo projet · Mars 2026 · Programme D365 / AS400 · Coordinateur technique · v2</div>
         <div style={{display:'flex',gap:12,alignItems:'center',flexWrap:'wrap'}}>
           <div className="leg">
             <div className="li"><span className="sd ok"></span> OK</div>
@@ -51,6 +53,7 @@ export default function Dashboard() {
             <div className="li"><span className="sd risk"></span> Risque</div>
             <div className="li"><span className="sd info"></span> Info</div>
           </div>
+          <Link to="/historique" style={{fontSize:'11px',color:'var(--b600)',textDecoration:'none'}}>📅 Historique</Link>
           <Link to="/editor" style={{fontSize:'11px',color:'var(--b600)',textDecoration:'none'}}>✏️ Éditer</Link>
           {supabase && (
             <button

@@ -4,6 +4,7 @@ import { supabase } from './supabaseClient'
 import Login from './pages/Login'
 import Dashboard from './pages/Dashboard'
 import Editor from './pages/Editor'
+import Historique from './pages/Historique'
 
 export default function App() {
   const [user, setUser] = useState(null)
@@ -36,6 +37,7 @@ export default function App() {
         <Route path="/" element={<Dashboard />} />
         <Route path="/dashboard" element={<Navigate to="/" replace />} />
         <Route path="/editor" element={<Editor />} />
+        <Route path="/historique" element={<Historique />} />
         <Route path="*" element={<Navigate to="/" replace />} />
       </Routes>
     </BrowserRouter>
